@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="./Assets/logo.webp" type="image/x-icon">
+
+    <!-- Seo-->
+    <title>Arkanoid | Version 1.0</title>
+    <meta name="description" content="Arkanoid recreation built with JavaScript, HTML, and CSS for desktop and mobile, created for the AngelSg35395 GitHub portfolio.">
+    <meta name="keywords" content="Arkanoid, HTML, CSS, JavaScript, Game, Game Development, Coding, Programming, Web Development, Portfolio, AngelSg35395, Creeper3, Creeper35395, The_Potatop">
+    <meta name="author" content="AngelSg35395 In GitHub">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#111">
+    <link rel="canonical" href="https://arkanoidsg.netlify.app/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arkanoidsg.netlify.app/">
+    <meta property="og:title" content="Arkanoid | Version 1.0">
+    <meta property="og:description" content="Arkanoid recreation built with JavaScript, HTML, and CSS for desktop and mobile, created for the AngelSg35395 GitHub portfolio.">
+    <meta property="og:image" content="https://arkanoidsg.netlify.app/Assets/logo.webp">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://arkanoidsg.netlify.app/">
+    <meta property="twitter:title" content="Arkanoid | Version 1.0">
+    <meta property="twitter:description" content="Arkanoid recreation built with JavaScript, HTML, and CSS for desktop and mobile, created for the AngelSg35395 GitHub portfolio.">
+    <meta property="twitter:image" content="https://arkanoidsg.netlify.app/Assets/logo.webp">
+
+    <!-- Css -->
+    <link rel="stylesheet" href="./style.css">
+
+    <!-- Scripts -->
+    <script defer src="./script.js"></script>
+
+    <!-- Schema Json-LD -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "VideoGame",
+            "name": "Arkanoid",
+            "description": "Arkanoid recreation built with JavaScript, HTML, and CSS for desktop and mobile, created for the AngelSg35395 GitHub portfolio.",
+            "genre": "Action",
+            "gamePlatform": ["Web Browser", "Desktop", "Mobile"],
+            "operatingSystem": "Any",
+            "author": {
+                "@type": "Person",
+                "name": "AngelSg35395"
+            },
+            "publisher": {
+                "@type": "Person",
+                "name": "AngelSg35395"
+            },
+            "url": "https://arkanoidsg.netlify.app/",
+            "image": "https://arkanoidsg.netlify.app/Assets/logo.webp",
+            "inLanguage": "en
+        }
+    </script>
+</head>
+
+<body>
+    <header class="game-header">
+        <a id="pause-btn" class="pause-btn" aria-label="Pause Game" href="#">
+            <img src="./Assets/pause-btn.webp" alt="Pause Button" draggable="false">
+        </a>
+    </header>
+
+    <canvas id="canvas"></canvas>
+
+    <section class="game-control-section">
+        <div class="game-control-buttons">
+            <a id="left-btn" class="game-control-btn" aria-label="Left Button" href="#">
+                <img src="./Assets/left-arrow.png" alt="Left Arrow" draggable="false">
+            </a>
+            <a id="right-btn" class="game-control-btn" aria-label="Right Button" href="#">
+                <img src="./Assets/right-arrow.png" alt="Right Arrow" draggable="false">
+            </a>
+        </div>
+    </section>
+
+    <!-- Game Over Modal -->
+    <dialog id="game-over-dialog" aria-labelledby="game-over-title" aria-describedby="game-over-desc">
+        <header>
+            <h1 id="game-over-title">GAME OVER</h1>
+        </header>
+        <section id="game-over-desc">
+            <p>Your ball has left the map</p>
+            <div class="stats" role="group" aria-label="Game Statistics">
+                <span>Score: <span id="final-score">0</span></span>
+                <span>Best Score: <span id="best-score">0</span></span>
+            </div>
+        </section>
+        <footer>
+            <button id="restart-btn" class="modal-btn" type="button" aria-label="Play Again">PLAY AGAIN</button>
+        </footer>
+    </dialog>
+
+    <!-- Win Modal -->
+    <dialog id="win-dialog" class="win" aria-labelledby="win-title" aria-describedby="win-desc">
+        <header>
+            <h1 id="win-title">YOU WIN!</h1>
+        </header>
+        <section id="win-desc">
+            <p>You cleared all the bricks!</p>
+            <div class="stats" role="group" aria-label="Victory Statistics">
+                <span>Final Score: <span id="win-score">0</span></span>
+            </div>
+        </section>
+        <footer>
+            <button id="win-restart-btn" class="modal-btn" type="button" aria-label="Play Again">PLAY AGAIN</button>
+        </footer>
+    </dialog>
+
+    <!-- Pause Modal -->
+    <dialog id="pause-dialog" class="pause" aria-labelledby="pause-title" aria-describedby="pause-desc">
+        <header>
+            <h1 id="pause-title">PAUSED</h1>
+        </header>
+        <section id="pause-desc">
+            <p>Take a breath!</p>
+            <div class="stats" role="group" aria-label="Current Progress">
+                <span>Current Score: <span id="pause-score">0</span></span>
+            </div>
+        </section>
+        <footer>
+            <button id="resume-btn" class="modal-btn" type="button" aria-label="Resume Game">RESUME</button>
+        </footer>
+    </dialog>
+
+    <!-- Welcome / Start Modal -->
+    <dialog id="welcome-dialog" class="welcome" aria-labelledby="welcome-title" aria-describedby="welcome-desc">
+        <header>
+            <h1 id="welcome-title">ARKANOID</h1>
+        </header>
+        <section id="welcome-desc">
+            <p>Break the bricks to win!</p>
+
+            <div class="controls-grid" role="region" aria-label="Game Controls">
+                <div class="control-row">
+                    <span class="control-label">Move Left/Right</span>
+                    <div class="control-keys">
+                        <img src="./Assets/letter-a.png" class="control-img" alt="A Key" draggable="false">
+                        <img src="./Assets/letter-d.png" class="control-img" alt="D Key" draggable="false">
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <span class="control-label">Arrow Keys</span>
+                    <div class="control-keys">
+                        <img src="./Assets/left-arrow.png" class="control-img" alt="Left Arrow" draggable="false">
+                        <img src="./Assets/right-arrow.png" class="control-img" alt="Right Arrow" draggable="false">
+                    </div>
+                </div>
+
+                <div class="pause-info">
+                    <span class="control-label">Press</span>
+                    <img src="./Assets/escape-sign.png" class="control-img" alt="Escape Key" draggable="false"
+                        style="width: 1.5rem; height: 1.5rem; vertical-align: middle;">
+                    <span class="control-label">to Pause</span>
+                </div>
+
+                <span class="control-label">Best Score: <span id="best-score-modal">0</span></span>
+            </div>
+        </section>
+        <footer>
+            <button id="start-btn" class="modal-btn" type="button">START GAME</button>
+        </footer>
+    </dialog>
+
+    <section class="credits-section">
+        <p>Music by <a href="https://www.youtube.com/@sinesita" target="_blank">Sinesita</a></p>
+        <p>Original Sound Effects By Arkanoid Game</p>
+    </section>
+
+    <footer class="web-footer">
+        <p>Made with 💖 and ☕ by <a href="https://github.com/AngelSg35395" target="_blank">AngelSg35395</a></p>
+    </footer>
+
+    <img src="./Assets/bricks.webp" alt="bricks asset" id="bricksAsset" hidden>
+    <img src="./Assets/sprite1.webp" alt="sprites asset" id="spritesAsset" hidden>
+</body>
+
+</html>
