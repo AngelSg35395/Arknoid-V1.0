@@ -55,6 +55,7 @@ Arkanoid/
 |       |-- menu.wav    # Menu / idle music (loop)
 |       |-- main.wav    # In-game music (loop)
 |       |-- hit.wav     # Brick hit sound
+|       |-- hitWall.wav # Wall and paddle hit sound
 |       |-- lose.wav    # Game over sound
 ```
 
@@ -102,12 +103,22 @@ Arkanoid/
 - **Dimensions:** 30 x 14 pixels per brick, 2 pixels padding.
 - **Offset:** 16 px from left, 20 px from top.
 - **Appearance:** One of 8 color variants from `bricks.webp` (random per brick).
-- **Scoring:** 100 points per brick destroyed.
+- **Scoring:** Points by color:
+```
+  White: 30
+  Yellow: 60
+  Pink: 90
+  Dark Blue: 120
+  Red: 150
+  Green: 180
+  Light Blue: 210
+  Orange: 240
+```
 - **Win condition:** All bricks destroyed.
 
 ### Scoring
 
-- **Current score:** Increased by 100 for each brick hit. Displayed on the canvas (bottom-left) and in modals.
+- **Current score:** Increased by points for each brick hit. Displayed on the canvas (bottom-left) and in modals.
 - **Best score:** Persisted in `localStorage` under the key `bestScore`. Updated when the current game ends and the score exceeds the stored value.
 
 ---
@@ -166,7 +177,7 @@ From Game Over or Win, “Play Again” resets the field, ball, paddle, and scor
 ### Responsive Behavior
 
 - Below 868 px width: Header and on-screen left/right buttons are shown.
-- Below 575 px width: Canvas is scaled (e.g. width 100%, height 50%) for smaller screens.
+- Below 465 px width: Canvas is scaled (e.g. width 100%, height 350px) for smaller screens.
 - Internal coordinates remain 448x440; scaling is handled by CSS.
 
 ### Accessibility
@@ -201,3 +212,5 @@ Current versions of Chrome, Firefox, Safari, and Edge are supported. Older brows
 ## License and Usage
 
 This project is intended for portfolio and educational use. Respect the rights of the original Arkanoid IP and the credited authors for assets and music when reusing or redistributing.
+
+## Version 1.0.1

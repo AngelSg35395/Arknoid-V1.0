@@ -24,7 +24,6 @@ const pauseBtn = qs("#pause-btn");
 
 // Sounds
 const gameOverSound = new Audio("./Assets/sounds/lose.wav");
-const hitSound = new Audio("./Assets/sounds/hit.wav");
 
 const menuSound = new Audio("./Assets/sounds/menu.wav");
 menuSound.loop = true;
@@ -40,9 +39,13 @@ const spritesAsset = qs("#spritesAsset");
 canvas.width = 448;
 canvas.height = 440;
 
+pointsCanvas.width = 448;
+pointsCanvas.height = 440;
+
+
 // Objects
 const paddle = {
-    width: 50,
+    width: 70,
     height: 12,
     x: (canvas.width - 100) / 2,
     y: canvas.height - 20,
@@ -80,7 +83,7 @@ const paddle = {
             spritesAsset,
             29,
             174,
-            this.width,
+            50,
             this.height,
             this.x,
             this.y,
@@ -113,11 +116,15 @@ const ball = {
         // Left & Right Collision
         if (this.x + this.dx > canvas.width - this.radius || this.x + this.dx < this.radius) {
             this.dx = -this.dx;
+            const hitWallSound = new Audio("./Assets/sounds/hitWall.wav");
+            hitWallSound.play();
         };
 
         // Up Collision
         if (this.y + this.dy - this.radius < 0) {
             this.dy = -this.dy;
+            const hitWallSound = new Audio("./Assets/sounds/hitWall.wav");
+            hitWallSound.play();
         };
 
         // Paddle Collision
@@ -126,6 +133,8 @@ const ball = {
 
         if (isBallSameXAsPaddle && isBallTouchingPaddle) {
             this.dy = -this.dy;
+            const hitWallSound = new Audio("./Assets/sounds/hitWall.wav");
+            hitWallSound.play();
         } else if (this.y + this.dy > canvas.height - this.radius) {
             player.gameOver = true;
             gameOver();
@@ -172,8 +181,11 @@ const BricksManager = {
                 // Give a random Color
                 const color = Math.floor(Math.random() * 8);
 
+                // Give a random point for color
+                const points = (color + 1) * 30;
+
                 // Save Brick
-                this.bricks[c][r] = { x: brickX, y: brickY, status: this.status.Active, color: color };
+                this.bricks[c][r] = { x: brickX, y: brickY, status: this.status.Active, color: color, points: points };
                 this.totalBricks++;
             }
         }
@@ -211,11 +223,47 @@ const BricksManager = {
                 const isBallTouchingBrick = ball.y > currentBrick.y && ball.y < currentBrick.y + this.bricksHeight;
 
                 if (isBallSameXAsBrick && isBallTouchingBrick) {
+                    const hitSound = new Audio("./Assets/sounds/hit.wav");
+                    hitSound.volume = 0.5;
                     hitSound.play();
+
                     ball.dy = -ball.dy;
                     currentBrick.status = this.status.Destroyed;
-                    player.score += 100;
+                    player.score += currentBrick.points;
                     this.destroyedBricks++;
+
+                    // Show Points Message
+                    const pointsCanvas = qs("#pointsCanvas");
+                    const pointsCtx = pointsCanvas.getContext("2d");
+
+                    let pos = currentBrick.y + 10;
+
+                    pointsCtx.font = "16px VT323";
+                    pointsCtx.fillStyle = "#fff";
+
+                    const pointsTime = setInterval(() => {
+                        pointsCtx.clearRect(
+                            currentBrick.x,
+                            pos - 10,
+                            40,
+                            40
+                        );
+
+                        pos += 5;
+
+                        pointsCtx.fillText(`+${currentBrick.points}`, currentBrick.x, pos);
+
+                        if (pos > currentBrick.y + 50) {
+                            pointsCtx.clearRect(
+                                currentBrick.x,
+                                pos - 10,
+                                40,
+                                40
+                            );
+
+                            clearInterval(pointsTime);
+                        }
+                    }, 30);
 
                     if (this.destroyedBricks === this.totalBricks) {
                         player.gameOver = true;
@@ -293,7 +341,7 @@ function initEvents() {
 
     pauseBtn.addEventListener("click", () => {
         if (player.pause || player.gameOver) return;
-        
+
         pauseBtn.classList.add("pressed");
         qs("#pause-score").textContent = player.score;
         pauseModal?.showModal();
