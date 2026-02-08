@@ -277,10 +277,15 @@ dialog p {
     backdrop-filter: blur(3px);
 }
 
-.web-footer p a {
-    font-size: 0.8rem;
+.web-footer p,
+a {
+    font-size: 0.9em;
     color: #fff;
     text-decoration: none;
+}
+
+.web-footer a {
+    text-decoration: underline;
 }
 
 @media (max-width: 868px) {
