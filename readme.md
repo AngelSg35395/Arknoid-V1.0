@@ -4,7 +4,7 @@
 
 Arkanoid is a browser-based recreation of the classic brick-breaker arcade game. The project is implemented with vanilla JavaScript, HTML5, and CSS3. It runs on desktop and mobile devices and does not require external frameworks or build tools.
 
-**Version:** 1.0
+**Version:** 1.0.1
 **Author:** AngelSg35395
 **Live URL:** https://arkanoidsg.netlify.app/
 
@@ -212,5 +212,3 @@ Current versions of Chrome, Firefox, Safari, and Edge are supported. Older brows
 ## License and Usage
 
 This project is intended for portfolio and educational use. Respect the rights of the original Arkanoid IP and the credited authors for assets and music when reusing or redistributing.
-
-## Version 1.0.1
