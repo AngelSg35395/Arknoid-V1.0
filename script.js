@@ -157,8 +157,8 @@ const ball = {
 };
 
 const BricksManager = {
-    bricksRowCount: 1,
-    bricksColumnCount: 1,
+    bricksRowCount: 12,
+    bricksColumnCount: 13,
     bricksWidth: 30,
     bricksHeight: 14,
     bricksPadding: 2,
