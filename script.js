@@ -31,6 +31,9 @@ menuSound.loop = true;
 const mainSound = new Audio("./Assets/sounds/main.wav");
 mainSound.loop = true;
 
+const winSound = new Audio("./Assets/sounds/winMusic.wav");
+winSound.loop = true;
+
 // Assets
 const bricksAsset = qs("#bricksAsset");
 const spritesAsset = qs("#spritesAsset");
@@ -154,8 +157,8 @@ const ball = {
 };
 
 const BricksManager = {
-    bricksRowCount: 12,
-    bricksColumnCount: 13,
+    bricksRowCount: 1,
+    bricksColumnCount: 1,
     bricksWidth: 30,
     bricksHeight: 14,
     bricksPadding: 2,
@@ -364,6 +367,9 @@ function loadScreen() {
 };
 
 function startGame() {
+    winSound.pause();
+    winSound.currentTime = 0;
+
     // Reset Game
     player.gameOver = false;
     player.pause = false;
@@ -426,11 +432,12 @@ function gameOver() {
 
 function win() {
     mainSound.pause();
+    qs("#win-score").textContent = player.score;
 
     setTimeout(() => {
         updateBestScoreModal();
         winModal.showModal();
-        menuSound.play();
+        winSound.play();
     }, 1500);
 };
 
